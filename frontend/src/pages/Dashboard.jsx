@@ -162,7 +162,7 @@ const ActivityItem = ({ title, time, value, color, sport, duration, calories, ic
       mr: 2,
       color: color
     }}>
-      {icon ? <icon sx={{ fontSize: 24 }} /> : 
+      {icon ? React.createElement(icon, { sx: { fontSize: 24 } }) : 
         <Typography variant="h6" fontWeight="bold">
           {title.charAt(0)}
         </Typography>

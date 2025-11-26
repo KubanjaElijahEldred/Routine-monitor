@@ -869,6 +869,7 @@ const Tasks = () => {
                               label={getCategoryById(task.category).name}
                               size="small"
                               variant="outlined"
+                              component="span"
                               sx={{
                                 borderColor: getCategoryById(task.category).color,
                                 color: getCategoryById(task.category).color,
