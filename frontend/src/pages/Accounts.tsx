@@ -50,7 +50,10 @@ const Accounts: React.FC = () => {
               Manage your bank accounts and balances
             </p>
           </div>
-          <button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 hover:scale-105">
+          <button 
+            onClick={() => alert('Create Account feature coming soon!')}
+            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 hover:scale-105"
+          >
             <svg className="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
@@ -106,9 +109,12 @@ const Accounts: React.FC = () => {
                 <Link to={`/transfer?from=${account.id}`} className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 px-4 rounded-xl text-center hover:shadow-lg transition-all duration-300 hover:scale-105">
                   Transfer
                 </Link>
-                <button className="flex-1 bg-white/20 text-white py-2 px-4 rounded-xl text-center hover:bg-white/30 transition-all duration-300">
-                  Details
-                </button>
+                <button 
+                onClick={() => alert('Account details feature coming soon!')}
+                className="flex-1 bg-white/20 text-white py-2 px-4 rounded-xl text-center hover:bg-white/30 transition-all duration-300"
+              >
+                Details
+              </button>
               </div>
             </div>
           ))}
@@ -125,7 +131,10 @@ const Accounts: React.FC = () => {
             <p className="text-white/70 mb-8">
               Create your first bank account to start managing your finances with our modern banking system.
             </p>
-            <button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-3 rounded-xl hover:shadow-lg transition-all duration-300 hover:scale-105">
+            <button 
+              onClick={() => alert('Create Account feature coming soon!')}
+              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-3 rounded-xl hover:shadow-lg transition-all duration-300 hover:scale-105"
+            >
               Create Your First Account
             </button>
           </div>

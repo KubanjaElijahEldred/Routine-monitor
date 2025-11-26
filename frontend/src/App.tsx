@@ -10,6 +10,8 @@ import Accounts from './pages/Accounts';
 import Transactions from './pages/Transactions';
 import Transfer from './pages/Transfer';
 import Profile from './pages/Profile';
+import Analytics from './pages/Analytics';
+import Settings from './pages/Settings';
 
 const queryClient = new QueryClient();
 
@@ -49,6 +51,8 @@ function App() {
             <Route path="transactions" element={<Transactions />} />
             <Route path="transfer" element={<Transfer />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
         </Routes>
       </div>
