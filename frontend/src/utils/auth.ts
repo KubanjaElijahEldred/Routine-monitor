@@ -14,13 +14,22 @@ export const removeToken = (): void => {
 
 export const isAuthenticated = (): boolean => {
   const token = getToken();
-  if (!token) return false;
+  if (!token) {
+    console.log('No token found');
+    return false;
+  }
   
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
     const now = Date.now() / 1000;
-    return payload.exp > now;
+    const isValid = payload.exp > now;
+    console.log('Token payload:', payload);
+    console.log('Current time:', now);
+    console.log('Token expires:', payload.exp);
+    console.log('Token valid:', isValid);
+    return isValid;
   } catch (error) {
+    console.log('Token parsing error:', error);
     return false;
   }
 };

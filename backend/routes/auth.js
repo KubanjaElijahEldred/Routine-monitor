@@ -6,8 +6,8 @@ const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
-const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '24h' });
+const generateToken = (userId, user) => {
+  return jwt.sign({ id: userId, user: { id: userId, firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role, isVerified: user.isVerified } }, process.env.JWT_SECRET, { expiresIn: '24h' });
 };
 
 router.post('/register', [
@@ -43,12 +43,13 @@ router.post('/register', [
       phone,
       dateOfBirth,
       ssn,
-      address
+      address,
+      isVerified: true
     });
 
     await user.save();
 
-    const token = generateToken(user._id);
+    const token = generateToken(user._id, user);
 
     res.status(201).json({
       message: 'User registered successfully',
@@ -90,7 +91,7 @@ router.post('/login', [
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = generateToken(user._id);
+    const token = generateToken(user._id, user);
 
     res.json({
       message: 'Login successful',

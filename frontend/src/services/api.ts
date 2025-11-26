@@ -14,6 +14,9 @@ api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+    console.log('Request to:', config.url, 'with token');
+  } else {
+    console.log('Request to:', config.url, 'without token');
   }
   return config;
 });
@@ -22,6 +25,9 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      console.log('401 error detected, removing token');
+      console.log('Request URL:', error.config?.url);
+      console.log('Error response:', error.response?.data);
       localStorage.removeItem('token');
       window.location.href = '/login';
     }

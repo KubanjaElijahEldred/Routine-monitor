@@ -15,7 +15,10 @@ const Login: React.FC = () => {
   const loginMutation = useMutation({
     mutationFn: authAPI.login,
     onSuccess: (response: any) => {
+      console.log('Login response:', response);
+      console.log('Token being stored:', response.data.token);
       setToken(response.data.token);
+      console.log('Token stored, navigating to dashboard');
       navigate('/dashboard');
     },
     onError: (error: any) => {
