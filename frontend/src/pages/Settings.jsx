@@ -115,6 +115,8 @@ function a11yProps(index) {
 }
 
 const Settings = () => {
+  // Get user data from local storage
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
   const theme = useTheme();
   const [tabValue, setTabValue] = useState(0);
   const [openDialog, setOpenDialog] = useState(false);
@@ -349,7 +351,7 @@ const Settings = () => {
                 <TextField
                   fullWidth
                   label="Display Name"
-                  defaultValue="John Doe"
+                  defaultValue={user.name || ''}
                   variant="outlined"
                   margin="normal"
                 />
@@ -358,10 +360,11 @@ const Settings = () => {
                 <TextField
                   fullWidth
                   label="Email"
-                  defaultValue="john.doe@example.com"
+                  defaultValue={user.email || ''}
                   variant="outlined"
                   margin="normal"
                   type="email"
+                  disabled
                 />
               </Grid>
               <Grid>

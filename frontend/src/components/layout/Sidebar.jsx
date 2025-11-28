@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   List, 
@@ -84,6 +84,29 @@ const Sidebar = ({ open, onToggle }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState({});
+  const [user, setUser] = useState(() => {
+    const userData = localStorage.getItem('user');
+    return userData ? JSON.parse(userData) : { name: 'User', email: '', avatar: 'https://randomuser.me/api/portraits/men/1.jpg' };
+  });
+  const fileInputRef = useRef(null);
+  
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const updatedUser = { ...user, avatar: reader.result };
+        setUser(updatedUser);
+        // Update the avatar in local storage
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
+  const handleProfileClick = () => {
+    fileInputRef.current.click();
+  };
   
   const handleToggle = (item) => {
     setExpanded(prev => ({
@@ -229,25 +252,61 @@ const Sidebar = ({ open, onToggle }) => {
             '&:hover': {
               backgroundColor: 'rgba(255, 255, 255, 0.12)',
             },
+            position: 'relative',
+            overflow: 'hidden',
           }}
+          onClick={handleProfileClick}
         >
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageUpload}
+            accept="image/*"
+            style={{ display: 'none' }}
+          />
           <Avatar 
-            src="https://randomuser.me/api/portraits/men/1.jpg"
+            src={user.avatar || 'https://randomuser.me/api/portraits/men/1.jpg'}
             sx={{ 
               width: 40, 
               height: 40,
               mr: open ? 2 : 0,
-              border: `2px solid ${theme.palette.primary.light}`
+              border: `2px solid ${theme.palette.primary.light}`,
+              transition: 'transform 0.3s',
+              '&:hover': {
+                transform: 'scale(1.1)'
+              }
             }} 
           />
           {open && (
             <Box>
               <Typography variant="subtitle2" sx={{ color: 'white', fontWeight: 600 }}>
-                John Doe
+                {user.name || 'User'}
               </Typography>
               <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                Admin
+                {user.role || 'User'}
               </Typography>
+            </Box>
+          )}
+          {!open && (
+            <Box 
+              sx={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                textAlign: 'center',
+                bgcolor: 'rgba(0, 0, 0, 0.5)',
+                color: 'white',
+                fontSize: '10px',
+                py: 0.5,
+                opacity: 0,
+                transition: 'opacity 0.3s',
+                'div:hover &': {
+                  opacity: 1,
+                },
+              }}
+            >
+              Change Photo
             </Box>
           )}
         </Box>

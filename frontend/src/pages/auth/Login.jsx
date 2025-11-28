@@ -220,7 +220,14 @@ const Login = () => {
               variant="contained"
               size="large"
               disabled={isLoading}
-              sx={{ mb: 2 }}
+              sx={{ 
+                mb: 2,
+                color: 'white',
+                fontWeight: 'bold',
+                '&:hover': {
+                  backgroundColor: 'primary.dark'
+                }
+              }}
             >
               {isLoading ? 'Signing In...' : 'Sign In'}
             </Button>
