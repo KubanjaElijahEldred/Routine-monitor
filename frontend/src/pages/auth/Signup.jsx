@@ -25,6 +25,7 @@ import {
   Phone
 } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
+import { authAPI } from '../../services/api';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -112,46 +113,27 @@ const Signup = () => {
     setSignupError('');
     
     try {
-      // Get existing users from localStorage
-      const users = JSON.parse(localStorage.getItem('users') || '[]');
-      
-      // Check if email already exists
-      if (users.some(u => u.email === formData.email)) {
-        setSignupError('An account with this email already exists');
-        return;
-      }
-      
-      // Create new user object
-      const newUser = {
-        id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
+      // Prepare user data for registration
+      const userData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         phone: formData.phone,
-        password: formData.password, // In real app, this would be hashed
-        gender: Math.random() > 0.5 ? 'male' : 'female', // Random gender for avatar
-        createdAt: new Date().toISOString(),
-        isActive: true
+        password: formData.password,
       };
+
+      // Call the backend API for registration
+      const response = await authAPI.register(userData);
       
-      // Save user to localStorage
-      users.push(newUser);
-      localStorage.setItem('users', JSON.stringify(users));
-      
-      // Auto-login after successful signup
-      const token = btoa(JSON.stringify({ email: newUser.email, timestamp: Date.now() }));
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('user', JSON.stringify({
-        id: newUser.id,
-        name: `${newUser.firstName} ${newUser.lastName}`,
-        email: newUser.email,
-        avatar: `https://randomuser.me/api/portraits/${newUser.gender === 'female' ? 'women' : 'men'}/${newUser.id}.jpg`
-      }));
+      // Store the JWT token and user data from backend response
+      localStorage.setItem('authToken', response.token);
+      localStorage.setItem('user', JSON.stringify(response.user));
       
       setSuccess(true);
       
     } catch (error) {
-      setSignupError('An error occurred. Please try again.');
+      // Display error message from backend
+      setSignupError(error.message || 'An error occurred during registration. Please try again.');
     } finally {
       setIsLoading(false);
     }

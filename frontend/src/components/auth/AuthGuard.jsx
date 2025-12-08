@@ -2,6 +2,35 @@ import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { CircularProgress, Box } from '@mui/material';
 
+/**
+ * Helper function to decode JWT token and check expiration
+ * @param {string} token - JWT token
+ * @returns {boolean} - true if token is valid and not expired
+ */
+const isTokenValid = (token) => {
+  try {
+    // JWT has 3 parts separated by dots
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      return false;
+    }
+
+    // Decode the payload (second part)
+    const payload = JSON.parse(atob(parts[1]));
+    
+    // Check if token has expiration claim
+    if (!payload.exp) {
+      return false;
+    }
+
+    // Check if token is expired (exp is in seconds, Date.now() is in milliseconds)
+    const now = Date.now() / 1000;
+    return payload.exp > now;
+  } catch {
+    return false;
+  }
+};
+
 const AuthGuard = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -19,20 +48,16 @@ const AuthGuard = ({ children }) => {
           return;
         }
 
-        // Decode token to check if it's expired (simple validation)
-        const tokenData = JSON.parse(atob(token));
-        const now = Date.now();
-        
-        // Check if token is older than 24 hours (in real app, use proper JWT validation)
-        if (now - tokenData.timestamp > 24 * 60 * 60 * 1000) {
-          // Token expired, clear auth data
+        // Validate JWT token
+        if (!isTokenValid(token)) {
+          // Token is invalid or expired, clear auth data
           localStorage.removeItem('authToken');
           localStorage.removeItem('user');
           setIsAuthenticated(false);
         } else {
           setIsAuthenticated(true);
         }
-      } catch (error) {
+      } catch {
         // Invalid token, clear auth data
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
