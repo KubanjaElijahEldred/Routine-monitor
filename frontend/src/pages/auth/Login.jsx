@@ -22,6 +22,7 @@ import {
   Person
 } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
+import { authAPI } from '../../services/api';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -78,29 +79,18 @@ const Login = () => {
     setLoginError('');
     
     try {
-      // In a real app, this would be an API call to your backend
-      // For now, we'll simulate with local storage check
-      const users = JSON.parse(localStorage.getItem('users') || '[]');
-      const user = users.find(u => u.email === formData.email && u.password === formData.password);
+      // Call the backend API for authentication
+      const response = await authAPI.login(formData.email, formData.password);
       
-      if (user) {
-        // Store auth token (in real app, this would come from API)
-        const token = btoa(JSON.stringify({ email: user.email, timestamp: Date.now() }));
-        localStorage.setItem('authToken', token);
-        localStorage.setItem('user', JSON.stringify({
-          id: user.id,
-          name: `${user.firstName} ${user.lastName}`,
-          email: user.email,
-          avatar: user.avatar || `https://randomuser.me/api/portraits/${user.gender === 'female' ? 'women' : 'men'}/${user.id}.jpg`
-        }));
-        
-        // Redirect to dashboard
-        navigate('/dashboard');
-      } else {
-        setLoginError('Invalid email or password');
-      }
+      // Store the JWT token and user data from backend response
+      localStorage.setItem('authToken', response.token);
+      localStorage.setItem('user', JSON.stringify(response.user));
+      
+      // Redirect to dashboard
+      navigate('/dashboard');
     } catch (error) {
-      setLoginError('An error occurred. Please try again.');
+      // Display error message from backend or generic error
+      setLoginError(error.message || 'Invalid email or password. Please check your credentials and try again.');
     } finally {
       setIsLoading(false);
     }
