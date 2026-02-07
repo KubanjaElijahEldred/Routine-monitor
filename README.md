@@ -1,6 +1,6 @@
 # 📋 Routine Monitor App - Full Stack Application
 
-A modern, feature-rich Routine Monitor application with authentication, task management, team collaboration, and analytics dashboard. Built with React frontend and Java Spring Boot backend.
+A modern, feature-rich Routine Monitor application with authentication, task management, team collaboration, and analytics dashboard. Built with React frontend and Java Spring Boot backend
 
 ![Routine Monitor App Preview](https://via.placeholder.com/1200x600/1976d2/ffffff?text=Routine+Monitor+App+Dashboard)
 
